@@ -1,0 +1,26 @@
+# NeMo Guardrails configuration for the Payment Agent
+# This file defines the behavioral rails for the agent.
+
+define user ask about payment_status
+  "What is the status of my payment?"
+  "Why did my transaction fail?"
+
+define bot explain status
+  "I can help you with that. Let me check the transaction details."
+
+define flow payment_inquiry
+  user ask about payment_status
+  bot explain status
+
+# Safety Rail: Prevent the agent from executing dangerous operations without confirmation
+define flow dangerous_operation
+  $action = execute_intervention(action="block_bin")
+  bot ask "Are you sure you want to block this BIN? This will affect many users."
+  user express make_it_so
+  $action.execute()
+
+# Operational Boundary: Do not change retry logic for high-value transactions automatically
+define flow high_value_retry_check
+  $context = get_payment_context()
+  if $context.amount > 10000
+    bot refuse "I cannot automatically adjust strategies for transactions over $10k. Escalating to human operator."
