@@ -37,4 +37,4 @@ The system is managed via the `manage.sh` script which handles Docker containers
 
 The services will be available at:
 - **API**: [http://localhost:8000](http://localhost:8000)
-- **Dashboard**: [http://localhost:8501](http://localhost:8501)
+- **Dashboard**: [http://localhost:8502](http://localhost:8502)
